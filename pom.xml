@@ -11,7 +11,8 @@
     <description>backend code for exam portal</description>
 
     <modules>
-        <module>user.service</module>
-        <module>exam.server</module>
+        <module>user.service.api.gateway</module>
+        <module>exam-server</module>
+        <module>discovery-server</module>
     </modules>
 </project>

@@ -62,14 +62,9 @@ public class UserController {
         this.userService.deleteUser(userId);
     }
 
-
-    //update api
-
-
     @ExceptionHandler(UserFoundException.class)
     public ResponseEntity<?> exceptionHandler(UserFoundException ex) {
         return ResponseEntity.ok(ex.getMessage());
     }
-
 
 }
