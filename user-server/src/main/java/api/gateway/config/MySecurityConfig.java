@@ -36,11 +36,13 @@ public class MySecurityConfig {
 //        Set permissions on endpoints
                 .authorizeHttpRequests(auth -> auth
 //            our public endpoints
+                        .requestMatchers(HttpMethod.POST, "/generate-token").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/signup/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/signup/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/authentication-docs/**").permitAll()
 //            our private endpoints
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .authenticationManager(authenticationManager)
                 .build();
     }

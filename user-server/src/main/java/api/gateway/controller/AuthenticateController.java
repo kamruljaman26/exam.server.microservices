@@ -6,7 +6,10 @@ import api.gateway.model.JwtRequest;
 import api.gateway.model.JwtResponse;
 import api.gateway.model.User;
 import api.gateway.service.impl.UserDetailsServiceImpl;
+import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@CrossOrigin("*")
 public class AuthenticateController {
 
 
@@ -32,8 +34,18 @@ public class AuthenticateController {
     private JwtUtils jwtUtils;
 
 
-    //generate token
+    @PostMapping("/validate")
+    public ResponseEntity<Boolean> validateToken(@RequestHeader("Authorization") String authToken) {
+        try {
+            String token = authToken.substring(7); // Assumes "Bearer " prefix
+            Boolean result = jwtUtils.validateToken(token, (UserDetails) userDetailsService);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false); // Token is invalid
+        }
+    }
 
+    //generate token
     @PostMapping("/generate-token")
     public ResponseEntity<?> generateToken(@RequestBody JwtRequest jwtRequest) throws Exception {
 
@@ -52,8 +64,6 @@ public class AuthenticateController {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(jwtRequest.getUsername());
         String token = this.jwtUtils.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
-
-
     }
 
 

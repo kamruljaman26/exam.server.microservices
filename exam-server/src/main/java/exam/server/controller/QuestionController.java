@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/question")
 public class QuestionController {
     @Autowired
